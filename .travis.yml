@@ -5,8 +5,8 @@ addons:
       - cmake
       - libfreeimage3
       - libfreeimage-dev 
-      - libboost-filesystem1.58
-      - libboost-program-options1.58
+      - libboost-filesystem1.54
+      - libboost-program-options1.54
       - clang
 
 script:
