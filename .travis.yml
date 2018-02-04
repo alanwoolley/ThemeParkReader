@@ -1,0 +1,14 @@
+addons:
+  apt:
+    packages:
+      - cmake-data
+      - cmake
+      - libfreeimage3
+      - libfreeimage-dev 
+      - libboost-filesystem1.54
+      - libboost-program-options1.54
+      - clang
+
+script:
+  - cmake .
+  - make
