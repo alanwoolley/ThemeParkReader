@@ -8,6 +8,7 @@
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <FreeImage.h>
+#include "Palette/Palette.hpp"
 
 namespace po = boost::program_options;
 namespace fs = boost::filesystem;
@@ -26,40 +27,12 @@ typedef struct {
 	int32_t datasize;
 } MusicFile;
 
-typedef struct {
-	char red;
-	char green;
-	char blue;
-} PaletteColour;
-
-typedef struct {
-	PaletteColour colours[256];
-	unsigned mult = 4;
-} Palette;
-
-void parse_palette(Palette* pal, std::string palFile) {
-	std::fstream paletteIn;
-	// Load in the palette
-	paletteIn.open(palFile.c_str(), std::ios::in | std::ios::binary);
-
-	// Parse the palette
-
-	for (int i = 0; i < 256; i++) {
-		PaletteColour col;
-		paletteIn.read(&col.red, 1);
-		paletteIn.read(&col.green, 1);
-		paletteIn.read(&col.blue, 1);
-		pal->colours[i] = col;
-	}
-	paletteIn.close();
-}
 
 int extract_sprites(po::variables_map options) {
 	FreeImage_Initialise();
 	std::cout << FreeImage_GetCopyrightMessage() << std::endl << std::endl;
 
 	std::string tabFile = options["input-file"].as<std::string>();
-
 
 	if (tabFile.substr(tabFile.length() - 3, 3).compare("TAB") != 0) {
 		std::cerr << "Please specify a .TAB input file" << std::endl;
@@ -98,7 +71,7 @@ int extract_sprites(po::variables_map options) {
 		}
 		else {
 			std::string palPath = options["palette"].as<std::string>();
-			parse_palette(&palette, palPath);
+			palette = Palette::FromFile(palPath);
 		}
 	}
 
@@ -158,9 +131,9 @@ int extract_sprites(po::variables_map options) {
 						else {
 							char p;
 							datFileIn.read(&p, 1);
-							pix.rgbRed = palette.colours[(uint8_t)p].red * palette.mult;
-							pix.rgbGreen = palette.colours[(uint8_t)p].green * palette.mult;
-							pix.rgbBlue = palette.colours[(uint8_t)p].blue * palette.mult;
+							pix.rgbRed = palette.colours[(uint8_t)p].red * palette.intensity;
+							pix.rgbGreen = palette.colours[(uint8_t)p].green * palette.intensity;
+							pix.rgbBlue = palette.colours[(uint8_t)p].blue * palette.intensity;
 							FreeImage_SetPixelColor(bitmap, col, file.height - row, &pix);
 							pos++;
 							col++;
@@ -292,8 +265,7 @@ int extract_image(po::variables_map options) {
 
 	std::string outName = "image.bmp";
 
-	Palette palette;
-	parse_palette(&palette, paletteFile);
+	Palette palette = Palette::FromFile(paletteFile);
 
 	// Load in file
 
@@ -308,9 +280,9 @@ int extract_image(po::variables_map options) {
 		for (int x = 0; x < width; x++) {
 			char colourCode = 0;
 			imageIn.read(&colourCode, 1);
-			pix.rgbRed = palette.colours[(uint8_t)colourCode].red * palette.mult;
-			pix.rgbGreen = palette.colours[(uint8_t)colourCode].green * palette.mult;
-			pix.rgbBlue = palette.colours[(uint8_t)colourCode].blue * palette.mult;
+			pix.rgbRed = palette.colours[(uint8_t)colourCode].red * palette.intensity;
+			pix.rgbGreen = palette.colours[(uint8_t)colourCode].green * palette.intensity;
+			pix.rgbBlue = palette.colours[(uint8_t)colourCode].blue * palette.intensity;
 			FreeImage_SetPixelColor(bitmap, x, y, &pix);
 		}
 	}
@@ -337,6 +309,7 @@ int extract_image(po::variables_map options) {
 	}
 	FreeImage_Save(FIF_BMP, palBit, (outPath + "pal.bmp").c_str(), 0);
 
+	FreeImage_Unload(palBit);
 	FreeImage_DeInitialise();
 
 	return EXIT_SUCCESS;
@@ -348,8 +321,8 @@ void print_usage(std::string name, const po::options_description &options) {
 	std::cout << options << std::endl;
 	std::cout << "This software comes with absolutely no warranty." << std::endl;
 }
-int main(int argc, const char* argv[]) {
 
+int main(int argc, const char* argv[]) {
 
 	po::options_description usage("Generic");
 	usage.add_options()

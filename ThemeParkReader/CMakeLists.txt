@@ -1,6 +1,7 @@
 add_executable(
     ThemeParkReader 
         "src/ThemeParkReader.cpp"
+		"src/Palette/Palette.cpp"
 )
 
 if(Boost_FOUND)
