@@ -13,6 +13,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED filesystem program_options) 
 find_package(FreeImage REQUIRED)
 
+include(DownloadProject.cmake)
 download_project(PROJ                googletest
                  GIT_REPOSITORY      https://github.com/google/googletest.git
                  GIT_TAG             release-1.8.0
