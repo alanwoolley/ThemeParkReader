@@ -9,9 +9,10 @@ if(Boost_FOUND)
     target_link_libraries(ThemeParkReader ${Boost_LIBRARIES})	
 endif()
 
-if(FreeImage_FOUND)
+
+if(FREEIMAGE_FOUND)
 	include_directories(${FREEIMAGE_INCLUDE_DIRS})
-	MESSAGE(STATUS "freeimage library ${FREEIMAGE_LIBRARIES}")
+	MESSAGE(STATUS "freeimage library ${FREEIMAGE_LIBRARIES}")	
 	target_link_libraries(ThemeParkReader ${FREEIMAGE_LIBRARIES})
 endif()
 

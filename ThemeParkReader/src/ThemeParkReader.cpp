@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <locale>
+#include <memory>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
 #include <FreeImage.h>
