@@ -14,3 +14,4 @@ if(FreeImage_FOUND)
 	MESSAGE(STATUS "freeimage library ${FREEIMAGE_LIBRARIES}")
 	target_link_libraries(ThemeParkReader ${FREEIMAGE_LIBRARIES})
 endif()
+

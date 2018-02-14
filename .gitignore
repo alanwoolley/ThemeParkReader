@@ -11,5 +11,7 @@ Build
 CMakeSettings.json
 .vs
 CppProperties.json
-
+.vscode/
+*.cbp
+*.layout
 ThemeParkReader/ThemeParkReader

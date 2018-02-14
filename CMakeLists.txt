@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 3.2)
 
 project(ThemeParkReader)
 
@@ -12,6 +12,17 @@ set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost REQUIRED filesystem program_options) 
 find_package(FreeImage REQUIRED)
+
+download_project(PROJ                googletest
+                 GIT_REPOSITORY      https://github.com/google/googletest.git
+                 GIT_TAG             release-1.8.0
+                 ${UPDATE_DISCONNECTED_IF_AVAILABLE}
+)
+
+# Prevent GoogleTest from overriding our compiler/linker options
+# when building with Visual Studio
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 add_subdirectory("ThemeParkReader")
 
