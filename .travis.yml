@@ -8,6 +8,7 @@ addons:
       - libboost-filesystem1.54
       - libboost-program-options1.54
       - clang
+      - python
 
 script:
   - cmake .
