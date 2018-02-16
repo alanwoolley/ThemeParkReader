@@ -1,7 +1,9 @@
-#include "Palette.hpp"
+#include "palette.hpp"
 #include <fstream>
 
-Palette Palette::FromFile(std::string palFile) {
+using namespace reader;
+
+Palette reader::Palette::FromFile(std::string palFile) {
 	Palette pal;
 	std::fstream paletteIn;
 	// Load in the palette

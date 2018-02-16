@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+namespace reader {
 const unsigned PALETTE_SIZE = 256;
 
 typedef struct {
@@ -19,5 +20,5 @@ public:
 	int intensity = 4;
 
 };
-
+}
 #endif

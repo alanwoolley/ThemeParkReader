@@ -37,7 +37,10 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
                         "${gmock_SOURCE_DIR}/include")
 endif()
 
-add_subdirectory("ThemeParkReader")
+add_subdirectory("main")
+add_subdirectory("reader")
+add_subdirectory("test")
+
 
 
 
