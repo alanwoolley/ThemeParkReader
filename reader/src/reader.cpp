@@ -9,6 +9,7 @@
 #include <FreeImage.h>
 #include "palette/palette.hpp"
 #include "reader.hpp"
+#include "tab/tab.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -22,12 +23,16 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 
 	std::fstream tabFileIn, datFileIn;
 	tabFileIn.open(tabFile.c_str(), std::ios::in | std::ios::binary);
-
+	
 	if (tabFileIn.fail())
 	{
 		std::cerr << "Could not read .TAB file" << std::endl;
 		return (EXIT_FAILURE);
 	}
+
+	SpriteTab tab = ParseSpriteTab(tabFileIn);
+
+	tabFileIn.close();
 
 	std::string outPath;
 	Palette palette;
@@ -58,25 +63,13 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 		}
 	}
 
-	// Move to the first record
-	tabFileIn.seekg(0x06, std::ios_base::beg);
+
 	std::vector<SpriteFile> files;
 	unsigned counter = 0;
+	
 	while (true)
 	{
-		SpriteFile file;
-		tabFileIn.read(reinterpret_cast<char *>(&file.dataoffset), sizeof(file.dataoffset));
-		tabFileIn.read(reinterpret_cast<char *>(&file.width), sizeof(file.width));
-		tabFileIn.read(reinterpret_cast<char *>(&file.height), sizeof(file.height));
-		if (tabFileIn.eof())
-		{
-			break;
-		}
-		files.push_back(file);
-		std::cout << "File: " << counter;
-		std::cout << " (Offset: " << file.dataoffset;
-		std::cout << ", Size: " << (uint32_t)file.width << "x" << (uint32_t)file.height << ")" << std::endl;
-
+		SpriteFile file = tab.entries()[counter];
 		counter++;
 
 		if (!listOnly)
@@ -145,7 +138,7 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 			FreeImage_Unload(bitmap);
 		}
 	}
-	tabFileIn.close();
+
 	datFileIn.close();
 
 	FreeImage_DeInitialise();

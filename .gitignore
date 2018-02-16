@@ -16,3 +16,5 @@ CppProperties.json
 *.layout
 ThemeParkReader/ThemeParkReader
 googletest-*
+*.a
+*.so

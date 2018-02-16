@@ -1,6 +1,7 @@
 add_library(
     reader
         "src/reader.cpp"
+        "src/tab/tab.cpp"
 		"src/palette/palette.cpp"
 )
 
