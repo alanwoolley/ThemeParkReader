@@ -26,6 +26,7 @@ script:
 after_success:
   - lcov --no-external --directory . --capture --output-file coverage.info
   - lcov --add-tracefile coverage.base.info --add-tracefile coverage.info --output-file coverage.merged.info
-  - lcov -r coverage.merged.info '/usr/include/*' googletest/*' 'test/*' -o coverage.merged.info
+  - lcov -r coverage.merged.info '/usr/include/*' 'googletest-src/*' 'googletest/*' 'test/*' -o coverage.merged.info
+  - lcov --list coverage.merged.info
   - coveralls-lcov coverage.merged.info
   
