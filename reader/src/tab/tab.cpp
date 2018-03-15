@@ -4,18 +4,6 @@
 
 namespace reader {
 
-SpriteTab ParseTest(std::istream& tabIn) {
-tabIn.seekg(0x06, std::ios_base::beg);
-char c = 0x00;
-while(!tabIn.eof()) {
-
-	if (tabIn.read(&c, sizeof(char))) {
-		printf("char: 0x%02X\n", (unsigned int)(c & 0xFF));
-	}
-}
-};
-
-
 SpriteTab ParseSpriteTab(std::istream& tabFileIn) {
   std::vector<SpriteFile> sprites;
 
