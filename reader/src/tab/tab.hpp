@@ -3,6 +3,8 @@
 
 namespace reader {
 
+
+
 template <class T>
 class Tab {
   public:
@@ -29,5 +31,7 @@ typedef struct
 using SpriteTab = Tab<SpriteFile>;
 using MusicTab = Tab<MusicFile>;
 
-SpriteTab ParseSpriteTab(std::fstream& tabFileIn);
+SpriteTab ParseSpriteTab(std::istream& tabFileIn);
+MusicTab ParseMusicTab(std::istream& tabFileIn);
+SpriteTab ParseTest(std::istream& tabIn);
 }
