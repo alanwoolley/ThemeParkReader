@@ -20,7 +20,11 @@ Palette pal;
 		is.read(reinterpret_cast<char*>(&col.red), 1);
 		is.read(reinterpret_cast<char*>(&col.green), 1);
 		is.read(reinterpret_cast<char*>(&col.blue), 1);
-		pal.colours[i] = col;
+		if (is.good()) {
+			pal.colours[i] = col;
+		} else {
+			break;
+		}
 	}
 
 	return pal;

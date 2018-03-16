@@ -16,11 +16,9 @@ class Palette {
 
 public:
 	static Palette FromFile(std::string palFile);
+	static Palette Parse(std::istream& is);
 	PaletteColour colours[PALETTE_SIZE];
 	int intensity = 4;
-
-private:
-	static Palette Parse(std::istream& is);
 };
 }
 #endif
