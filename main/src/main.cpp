@@ -28,17 +28,18 @@ int main(int argc, const char* argv[]) {
 	actions.add_options()
 		("extract-sounds,s", "Extract music or sounds")
 		("extract-image,i", "Extract fullscreen image")
+		("extract-font", "Extract font")
 		("extract-sprites,r", "Extract sprites");
 
 	po::options_description modifiers("Modifiers");
 	modifiers.add_options()
 		("list,l", "Only list files - do NOT extract")
-		("output-dir,o", po::value<string>(), "Output directory")
-		("palette,p", po::value<string>(), "Image palette file");
+		("output-dir,o", po::value<std::string>(), "Output directory")
+		("palette,p", po::value<std::string>(), "Image palette file");
 
 	po::options_description hidden("Hidden Options");
 	hidden.add_options()
-		("input-file", po::value<string>(), "Input file");
+		("input-file", po::value<std::string>(), "Input file");
 
 	po::options_description options_desc;
 	options_desc.add(usage).add(actions).add(modifiers).add(hidden);
@@ -60,7 +61,9 @@ int main(int argc, const char* argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	bool validAction = vm.count("extract-sounds") ^ vm.count("extract-image") ^ vm.count("extract-sprites");
+
+
+	bool validAction = vm.count("extract-sounds") ^ vm.count("extract-image") ^ vm.count("extract-sprites") ^ vm.count("extract-font");
 
 	if (vm.count("help") || vm.size() == 0) {
 		print_usage(APPLICATION_NAME, visible);
@@ -81,8 +84,10 @@ int main(int argc, const char* argv[]) {
 
 	std::string inputFile = vm["input-file"].as<std::string>();
 	std::string outDir = vm["output-dir"].as<std::string>();
-	std::string paletteFile = vm["palette"].as<std::string>();
+
+
 	if (vm.count("extract-image") && vm.count("input-file") && vm.count("palette")) {	
+		std::string paletteFile = vm["palette"].as<std::string>();
 		return ExtractImage(paletteFile, inputFile, outDir);
 	}
 
@@ -101,9 +106,13 @@ int main(int argc, const char* argv[]) {
 	}
 
 	if (vm.count("extract-sprites") && vm.count("input-file")) {
+		std::string paletteFile = vm["palette"].as<std::string>();
 		return ExtractSprites(paletteFile, inputFile, datFile, outDir, listOnly);
 	}
 
+	// if (vm.count("extract-font") && vm.count("input-file")) {
+	// 	return ExtractFont(inputFile, datFile, outDir);
+	// }	
 
 	return EXIT_SUCCESS;
 

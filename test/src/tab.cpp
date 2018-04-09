@@ -7,9 +7,6 @@
 using namespace reader;
 using namespace std;
 
-
-
-
 TEST(Tab, ParseSpriteTab) {
 
   std::vector<char> test_tab_data = {

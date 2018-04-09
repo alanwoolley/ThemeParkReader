@@ -15,6 +15,89 @@ namespace fs = boost::filesystem;
 
 using namespace reader;
 
+// int reader::ExtractFont(std::string tabFile, std::string inputFile, std::string outDir) {
+// 	FreeImage_Initialise();
+// 	std::cout << FreeImage_GetCopyrightMessage() << std::endl
+// 						<< std::endl;
+
+// 	std::fstream tabFileIn, datFileIn;
+// 	tabFileIn.open(tabFile.c_str(), std::ios::in | std::ios::binary);
+
+// 	if (tabFileIn.fail())
+// 	{
+// 		std::cerr << "Could not read .TAB file" << std::endl;
+// 		return (EXIT_FAILURE);
+// 	}
+
+// 	FontTab tab = ParseFontTab(tabFileIn);
+// 	tabFileIn.close();
+
+// 	std::string outPath;
+
+// 	// Open DAT file
+// 	datFileIn.open(inputFile.c_str(), std::ios::in | std::ios::binary);
+// 	if (datFileIn.fail())
+// 	{
+// 		std::cerr << "Could not read .DAT file" << std::endl;
+// 		return (EXIT_FAILURE);
+// 	}
+
+// 	outPath = std::string(outDir);
+// 	if (outPath.substr(outPath.length() - 1, 1).compare("/") != 0)
+// 	{
+// 		outPath += "/";
+// 	}
+
+	
+// 	unsigned int row = 0;
+// 	unsigned int col = 0;
+	
+// 	// for (int i=0; i< tab.entries().size(); i++)	{
+// 		for (int i=2; i< 7; i++)	{
+// 		std::cout << "Extracting entry " << i << std::endl;
+// 		FontCharacter fc = tab.entries()[i];
+	
+// 		FIBITMAP *bitmap = FreeImage_Allocate(fc.width, fc.height, 24);
+// 		datFileIn.seekg(fc.dataoffset);
+// 		std::cout << "Offset: " << (unsigned int) fc.dataoffset << std::endl;
+// 		std::cout << "Size: " << (unsigned int) fc.width << " x " << (unsigned int) fc.height << std::endl;
+// 		uint8_t line;
+// 		int shiftc = 8;
+// 		for (int row = 0; row < fc.height; row++) {
+// 			for (int col = 0; col < fc.width; col++) {
+// 				if (fc.width < 8 && shiftc == 8) {
+// 					datFileIn.read((char*)&line, sizeof(line));
+// 					shiftc = 0;
+// 				}
+
+// 				uint8_t p = (line >> shiftc) & 1 ;
+// 				shiftc++;
+// 				std::cout << (unsigned int) p;
+// 				RGBQUAD pix;
+// 				pix.rgbRed = p * 255;
+// 				pix.rgbGreen = p * 255;
+// 				pix.rgbBlue = p * 255;
+// 				FreeImage_SetPixelColor(bitmap, col, row, &pix);
+// 			}
+// 			std::cout << std::endl;
+
+// 		}
+
+// 		std::string out = outPath + "font-" + std::to_string(i) + ".bmp";
+// 			if (FreeImage_Save(FIF_BMP, bitmap, out.c_str(), 0))
+// 			{
+// 				std::cout << std::endl
+// 									<< "Image Saved to " << out << std::endl;
+// 			}
+// 			FreeImage_Unload(bitmap);
+
+// 	}
+
+// 		datFileIn.close();
+
+// 	FreeImage_DeInitialise();
+// }
+
 int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::string datFile, std::string outDir, bool listOnly)
 {
 	FreeImage_Initialise();
@@ -63,14 +146,11 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 		}
 	}
 
-
 	std::vector<SpriteFile> files;
-	unsigned counter = 0;
-	
-	while (true)
+	for (int counter = 99; counter < 100; counter++)
+	// for (int counter =0; counter < tab.entries().size(); counter++)
 	{
 		SpriteFile file = tab.entries()[counter];
-		counter++;
 
 		if (!listOnly)
 		{
@@ -83,19 +163,19 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 			unsigned int row = 0;
 			unsigned int col = 0;
 
+			datFileIn.seekg(pos, std::ios::beg);
+
 			while (row < file.height)
 			{
 				char first;
-				datFileIn.seekg(pos, std::ios::beg);
 				datFileIn.read(&first, 1);
-				pos++;
 
 				if (first < 0)
 				{
 					col -= first;
 				}
-				else if (!first)
-				{
+				else 
+				if (first == 0) {
 					col = 0;
 					row++;
 				}
@@ -110,10 +190,6 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 							row++;
 							col = 0;
 						}
-						else if (col == file.width)
-						{
-							// do nothing
-						}
 						else
 						{
 							char p;
@@ -121,8 +197,7 @@ int reader::ExtractSprites(std::string paletteFile, std::string tabFile, std::st
 							pix.rgbRed = palette.colours[(uint8_t)p].red * palette.intensity;
 							pix.rgbGreen = palette.colours[(uint8_t)p].green * palette.intensity;
 							pix.rgbBlue = palette.colours[(uint8_t)p].blue * palette.intensity;
-							FreeImage_SetPixelColor(bitmap, col, file.height - row, &pix);
-							pos++;
+							FreeImage_SetPixelColor(bitmap, col, file.height - row-1, &pix);
 							col++;
 						}
 					}

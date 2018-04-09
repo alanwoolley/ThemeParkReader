@@ -4,6 +4,25 @@
 
 namespace reader {
 
+// FontTab ParseFontTab(std::istream& tabFileIn) {
+// 	std::vector<FontCharacter> characters;
+
+// 	tabFileIn.seekg(0x06, std::ios_base::beg);
+
+// 	while (!tabFileIn.eof()) {
+// 		FontCharacter fc;
+// 		tabFileIn.read(reinterpret_cast<char *>(&fc.dataoffset), sizeof(fc.dataoffset));
+// 		tabFileIn.read(reinterpret_cast<char *>(&fc.width), sizeof(fc.width));
+// 		tabFileIn.read(reinterpret_cast<char *>(&fc.height), sizeof(fc.height));
+
+// 		if (tabFileIn.good()) {
+// 			characters.push_back(fc);
+// 		}
+// 	}
+
+// 	return FontTab(characters);
+// }
+
 SpriteTab ParseSpriteTab(std::istream& tabFileIn) {
   std::vector<SpriteFile> sprites;
 
